@@ -2,6 +2,10 @@ require 'dotenv'
 Dotenv.load
 require 'sinatra'
 require 'httparty'
+Dir[File.dirname(__FILE__) + '/helpers/*.rb'].each {|file| require file}
+
+# initialize classes
+slack_api = SlackApi.new
 
 post '/jira_hook' do
   begin
