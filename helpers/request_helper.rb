@@ -13,7 +13,7 @@ class InvalidRequestError < Exception
 end
 
 class RequestHelper
-  
+
   def initialize
     @@valid_request_types = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
   end
@@ -22,19 +22,20 @@ class RequestHelper
     query = options[:query] || nil
     headers = options[:headers] || nil
     body = options[:body] || nil
+    basic_auth = options[:basic_auth] || nil
     case type
     when 'GET'
-      response = HTTParty.get(url, :query => query, :headers => headers)
+      response = HTTParty.get(url, :query => query, :headers => headers, :basic_auth => basic_auth)
     when 'POST'
-      response = HTTParty.post(url, :query => query, :headers => headers, :body => body)
+      response = HTTParty.post(url, :query => query, :headers => headers, :body => body, :basic_auth => basic_auth)
     when 'PUT'
-      response = HTTParty.put(url, :query => query, :headers => headers, :body => body)
+      response = HTTParty.put(url, :query => query, :headers => headers, :body => body, :basic_auth => basic_auth)
     when 'PATCH'
-      response = HTTParty.patch(url, :query => query, :headers => headers, :body => body)
+      response = HTTParty.patch(url, :query => query, :headers => headers, :body => body, :basic_auth => basic_auth)
     when 'DELETE'
-      response = HTTParty.delete(url, :query => query, :headers => headers)
+      response = HTTParty.delete(url, :query => query, :headers => headers, :basic_auth => basic_auth)
     else
-      raise InvalidRequestError, 'Invalid request type "%s". Valid types are "%s"' %[type, @@valid_request_types.join(',')] 
+      raise InvalidRequestError, 'Invalid request type "%s". Valid types are "%s"' %[type, @@valid_request_types.join(',')]
     end
     if !valid_response_codes.include? response.code
       raise RequestError.new(url, response)
