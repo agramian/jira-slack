@@ -22,10 +22,8 @@ JIRA_PASSWORD='password'
 
 SLACK_BASE_URL='https://example.slack.com/api/'
 SLACK_AUTH_TOKEN='xxxxx'
+SLACK_DEFAULT_RECIPIENT='user'
 ```
-
-#### Field mapping
-Modify the `db\seeds.rb` file to map Redmine and GitHub fields.
 
 #### Installing dependencies
 
