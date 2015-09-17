@@ -16,7 +16,7 @@ Create a webhook through JIRA with the issue created/updated events.
 Create a `.env` file in the project root to define the necessary environment variables.
 Example file below:
 ```
-JIRA_BASE_URL='https://jira.example.com/'
+JIRA_BASE_URL='https://jira.example.com/rest/api/latest/'
 JIRA_USERNAME='user'
 JIRA_PASSWORD='password'
 
