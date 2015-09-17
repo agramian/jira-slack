@@ -42,14 +42,16 @@ post '/jira_hook' do
     # remove the user that triggered the event
     recipient_list.delete(event_user)
     # notify each recipient via slack
-    slack_api.post_message(
-      channel: "@#{ENV['SLACK_DEFAULT_RECIPIENT']}",
-      attachments: [{
-        'title': event_type,
-        'text': '<https://jira.guidebook.com/browse/%s|%s>' %[data['issue']['key'], data['issue']['key']],
-      }],
-      username: 'JIRA',
-      icon_emoji: ':smile_cat:')
+    recipient_list.each do |user|
+      slack_api.post_message(
+        channel: "@#{user}",
+        attachments: [{
+          'title': event_type,
+          'text': '<https://jira.guidebook.com/browse/%s|%s>' %[data['issue']['key'], data['issue']['key']],
+        }],
+        username: 'JIRA',
+        icon_emoji: ':smile_cat:')
+    end
   	'OK'
   rescue => exception
     status 500
