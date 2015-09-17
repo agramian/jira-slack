@@ -12,4 +12,9 @@ class AppTest < WebhookTest
       icon_emoji: ':smile_cat:')
   end
 
+  def test_post_jira
+    response = post '/jira_hook', @jira_data['updated']
+    assert_equal 200, response.status
+  end
+
 end

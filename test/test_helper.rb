@@ -9,11 +9,11 @@ class WebhookTest < Minitest::Test
 
   def setup
     # import json data to hash
-    @jira_events = {}
+    @jira_data = {}
     Dir[File.dirname(__FILE__) + '/data/json/jira/*' ].each {|file|
       File.open(file, 'rb') { |f|
         data = JSON.parse(f.read)
-        @jira_events[File.basename(file, File.extname(file))] = data.to_json
+        @jira_data[File.basename(file, File.extname(file))] = data.to_json
       }
     }
     super

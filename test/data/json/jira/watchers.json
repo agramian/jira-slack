@@ -1,0 +1,37 @@
+{
+   "self":"http://jira.guidebook.com:8081/rest/api/latest/issue/BUIL-449/watchers",
+   "isWatching":true,
+   "watchCount":2,
+   "watchers":[
+      {
+         "self":"http://jira.guidebook.com:8081/rest/api/2/user?username=abtin",
+         "name":"abtin",
+         "key":"abtin",
+         "emailAddress":"abtin@guidebook.com",
+         "avatarUrls":{
+            "48x48":"http://www.gravatar.com/avatar/3053d06298929cd5d7009d03454e6293?d=mm&s=48",
+            "24x24":"http://www.gravatar.com/avatar/3053d06298929cd5d7009d03454e6293?d=mm&s=24",
+            "16x16":"http://www.gravatar.com/avatar/3053d06298929cd5d7009d03454e6293?d=mm&s=16",
+            "32x32":"http://www.gravatar.com/avatar/3053d06298929cd5d7009d03454e6293?d=mm&s=32"
+         },
+         "displayName":"Abtin Gramian",
+         "active":true,
+         "timeZone":"America/Los_Angeles"
+      },
+      {
+         "self":"http://jira.guidebook.com:8081/rest/api/2/user?username=sean",
+         "name":"sean",
+         "key":"sean",
+         "emailAddress":"sean@guidebook.com",
+         "avatarUrls":{
+            "48x48":"http://www.gravatar.com/avatar/309505fd9f0ab34cf29c0bee938b13a8?d=mm&s=48",
+            "24x24":"http://www.gravatar.com/avatar/309505fd9f0ab34cf29c0bee938b13a8?d=mm&s=24",
+            "16x16":"http://www.gravatar.com/avatar/309505fd9f0ab34cf29c0bee938b13a8?d=mm&s=16",
+            "32x32":"http://www.gravatar.com/avatar/309505fd9f0ab34cf29c0bee938b13a8?d=mm&s=32"
+         },
+         "displayName":"Sean Coonce",
+         "active":true,
+         "timeZone":"America/Los_Angeles"
+      }
+   ]
+}
