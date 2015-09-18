@@ -35,13 +35,24 @@ post '/jira_hook' do
     jira_api.get_issue_watchers(data['issue']['id'])['watchers'].each do |watcher|
       recipient_list << watcher['name']
     end
-    # TODO get user mentions in issue body
-    # TODO get comment authors and user mentions in comment body
+    # user mention regex
+    user_mention_regex = Regexp.new(/\[\~([^]]+)\]/)
+    # get user mentions in issue description
+    jira_api.get_issue(data['issue']['id'])['fields']['description'].scan(user_mention_regex).flatten.each do |name|
+      recipient_list << name
+    end
+    # get user mentions in comments
+    jira_api.get_issue_comments(data['issue']['id'])['comments'].each do |comment|
+      recipient_list << comment['author']['name']
+      recipient_list << comment['updateAuthor']['name']
+      comment['body'].scan(user_mention_regex).flatten.each do |name|
+        recipient_list << name
+      end
+    end
     # convert recipient_list to set to remove duplicates
-    recipient_list.to_set
+    recipient_list = recipient_list.to_set
     # remove the user that triggered the event
     recipient_list.delete(event_user)
-    # notify each recipient via slack
     recipient_list.each do |user|
       slack_api.post_message(
         channel: "@#{user}",
@@ -55,7 +66,7 @@ post '/jira_hook' do
   	'OK'
   rescue => exception
     status 500
-    exception = "Exception occured while processing redmine_hook!" \
+    exception = "Exception occured while processing jira_hook!" \
                 "\nBacktrace:\n\t#{exception.backtrace.join("\n\t")}" \
                 "\nMessage: #{exception.message}"
     puts exception

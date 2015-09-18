@@ -29,4 +29,12 @@ class JiraApi
       :headers => @@headers)
   end
 
+  def get_issue_comments(id)
+    return @@request_helper.request(
+      'GET',
+      ENV['JIRA_BASE_URL'] + 'issue/%s/comment' %[id.to_s],
+      :basic_auth => @@basic_auth,
+      :headers => @@headers)
+  end
+
 end
