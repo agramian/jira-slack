@@ -54,14 +54,16 @@ post '/jira_hook' do
     # remove the user that triggered the event
     recipient_list.delete(event_user)
     # notify each recipient via slack
+    issue_link = '<https://jira.guidebook.com/browse/%s|%s>' %[data['issue']['key'], data['issue']['key']]
     recipient_list.each do |user|
       slack_api.post_message(
         channel: "@#{user}",
         attachments: [{
           'title': event_type,
+          'fallback': issue_link,
           'fields': [{
             'title': 'Link',
-            'value': '<https://jira.guidebook.com/browse/%s|%s>' %[data['issue']['key'], data['issue']['key']]
+            'value': issue_link
           },
           {
             'title': 'Summary',
