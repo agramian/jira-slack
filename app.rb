@@ -38,8 +38,11 @@ post '/jira_hook' do
     # user mention regex
     user_mention_regex = Regexp.new(/\[\~([^]]+)\]/)
     # get user mentions in issue description
-    jira_api.get_issue(data['issue']['id'])['fields']['description'].scan(user_mention_regex).flatten.each do |name|
-      recipient_list << name
+    issue = jira_api.get_issue(data['issue']['id'])
+    if issue['fields']['description']
+      issue['fields']['description'].scan(user_mention_regex).flatten.each do |name|
+        recipient_list << name
+      end
     end
     # get user mentions in comments
     jira_api.get_issue_comments(data['issue']['id'])['comments'].each do |comment|
@@ -54,21 +57,14 @@ post '/jira_hook' do
     # remove the user that triggered the event
     recipient_list.delete(event_user)
     # notify each recipient via slack
-    issue_link = '<https://jira.guidebook.com/browse/%s|%s>' %[data['issue']['key'], data['issue']['key']]
+    issue_link = '<https://jira.guidebook.com/browse/%s|%s %s>' %[data['issue']['key'], data['issue']['key'], data['issue']['fields']['summary']]
     recipient_list.each do |user|
       slack_api.post_message(
         channel: "@#{user}",
         attachments: [{
           'title': event_type,
+          'text': issue_link,
           'fallback': issue_link,
-          'fields': [{
-            'title': 'Link',
-            'value': issue_link
-          },
-          {
-            'title': 'Summary',
-            'value': "#{data['issue']['fields']['summary']}",
-          }]
         }],
         username: 'JIRA',
         icon_emoji: ':smile_cat:')
