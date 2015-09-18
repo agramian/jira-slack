@@ -27,7 +27,7 @@ post '/jira_hook' do
     # get issue reporter, creator, and assignee if any
     ['reporter', 'creator', 'assignee'].each do |field|
         if data['issue'][field]
-          recipient_list << data['issue'][field]['name']
+          recipient_list << data['issue']['fields'][field]['name']
         end
     end
     # get watchers
