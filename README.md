@@ -12,6 +12,9 @@ Setup
 ###### Configure Webhook
 Create a webhook through JIRA with the issue created/updated events.
 
+###### Add custom emoji (Optional)
+Go to http(s)://[your domain].slack.com/customize/emoji for your JIRA instance and add a custom emoji which will be used as the bot icon for all messages then specify that emoji in your environment file.
+
 #### Environment variables
 Create a `.env` file in the project root to define the necessary environment variables.
 Example file below:
@@ -23,6 +26,7 @@ JIRA_PASSWORD='password'
 SLACK_BASE_URL='https://example.slack.com/api/'
 SLACK_AUTH_TOKEN='xxxxx'
 SLACK_DEFAULT_RECIPIENT='user'
+SLACK_EMOJI=':jira:'
 ```
 
 #### Installing dependencies

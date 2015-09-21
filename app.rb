@@ -67,7 +67,7 @@ post '/jira_hook' do
           'fallback': issue_link,
         }],
         username: 'JIRA',
-        icon_emoji: ':smile_cat:')
+        icon_emoji: "#{ENV['SLACK_EMOJI']}")
     end
   	'OK'
   rescue => exception
