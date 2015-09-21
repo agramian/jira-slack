@@ -18,13 +18,15 @@ post '/jira_hook' do
     case event_type
     when 'jira:issue_updated'
       event_type = 'Issue Updated'
-      # add a hash for each change log event
+      # add a hash for each change log event (if any)
       # to include in the slack messaage
-      data['changelog']['items'].each do |item|
-        change_fields << {
-          'title': "Field #{item['field']} changed",
-          'value': "#{item['fromString']} -> #{item['toString']}"
-        }
+      if data['changelog']
+        data['changelog']['items'].each do |item|
+          change_fields << {
+            'title': "Field #{item['field']} changed",
+            'value': "#{item['fromString']} -> #{item['toString']}"
+          }
+        end
       end
       # add hash for the comment (if any)
       # to include in the slack message
@@ -99,7 +101,7 @@ post '/jira_hook' do
       channel: "@#{ENV['SLACK_DEFAULT_RECIPIENT']}",
       message: exception.to_s,
       username: 'JIRA',
-      icon_emoji: ':crying_cat_face:')
+      icon_emoji: "#{ENV['SLACK_EMOJI']}")
     exception
   end
 end
