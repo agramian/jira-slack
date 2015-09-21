@@ -14,9 +14,26 @@ post '/jira_hook' do
   	data = JSON.parse(request.body.read)
     # get event type
     event_type = data['webhookEvent']
+    change_fields = []
     case event_type
     when 'jira:issue_updated'
       event_type = 'Issue Updated'
+      # add a hash for each change log event
+      # to include in the slack messaage
+      data['changelog']['items'].each do |item|
+        change_fields << {
+          'title': "Field #{item['field']} changed",
+          'value': "#{item['fromString']} -> #{item['toString']}"
+        }
+      end
+      # add hash for the comment (if any)
+      # to include in the slack message
+      if data['comment']
+        change_fields << {
+          'title': "Comment added/updated",
+          'value': "*@#{data['comment']['updateAuthor']['name']} wrote*:\n#{data['comment']['body']}"
+        }
+      end
     when 'jira:issue_created'
       event_type = 'Issue Created'
     end
@@ -65,6 +82,8 @@ post '/jira_hook' do
           'title': event_type,
           'text': issue_link,
           'fallback': issue_link,
+          'mrkdwn_in': ['text', 'pretext', 'fields', 'title'],
+          'fields': change_fields
         }],
         username: 'JIRA',
         icon_emoji: "#{ENV['SLACK_EMOJI']}")
