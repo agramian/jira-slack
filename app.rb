@@ -85,7 +85,8 @@ post '/jira_hook' do
           'text': issue_link,
           'fallback': issue_link,
           'mrkdwn_in': ['text', 'pretext', 'fields', 'title'],
-          'fields': change_fields
+          'fields': change_fields,
+          'color': '#205081'
         }],
         username: 'JIRA',
         icon_emoji: "#{ENV['SLACK_EMOJI']}")
