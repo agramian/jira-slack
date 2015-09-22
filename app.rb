@@ -84,6 +84,11 @@ post '/jira_hook' do
     recipient_list.delete(event_user)
     # construct the jira issue link
     issue_link = '<https://jira.guidebook.com/browse/%s|%s %s>' %[data['issue']['key'], data['issue']['key'], data['issue']['fields']['summary']]
+    # get the update author info
+    slack_users = slack_api.get_users()
+    author = slack_users['members'].select{|user| user['name'] == event_user}.first
+    author_name =  author ? "@#{author['name']}" : nil
+    author_icon = author ? author['profile']['image_24'] : nil
     # notify each recipient via slack
     recipient_list.each do |user|
       slack_api.post_message(
@@ -91,6 +96,8 @@ post '/jira_hook' do
         attachments: [{
           'title': event_type,
           'text': issue_link,
+          'author_name': author_name,
+          'author_icon': author_icon,
           'fallback': issue_link,
           'mrkdwn_in': ['text', 'pretext', 'fields', 'title'],
           'fields': change_fields,

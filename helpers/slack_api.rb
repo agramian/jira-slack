@@ -39,7 +39,9 @@ class SlackApi
       'channel' => channel,
       'icon_emoji' => icon_emoji,
       'icon_url' => icon_url,
-      'link_names' => 1
+      'link_names' => 1,
+      'color' => color,
+      'unfurl_media' => true
     }.delete_if { |key, value| value.to_s.strip == '' }
     response = @@request_helper.request('POST', endpoint, return_raw=true, :query => @@token_param, :body => post_data)
     check_response_ok(endpoint,response)
