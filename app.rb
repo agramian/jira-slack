@@ -12,6 +12,8 @@ slack_api = SlackApi.new
 post '/jira_hook' do
   begin
   	data = JSON.parse(request.body.read)
+    # get complete issue data
+    issue = jira_api.get_issue(data['issue']['id'])
     # get event type
     event_type = data['webhookEvent']
     change_fields = []
@@ -22,9 +24,15 @@ post '/jira_hook' do
       # to include in the slack messaage
       if data['changelog']
         data['changelog']['items'].each do |item|
+          field_to_value = item['toString']
+          # special case for attachments
+          if item['field'] == 'Attachment' && item['toString']
+            attachment = issue['fields']['attachment'].select{|attachment| attachment['filename'] == item['toString']}.first
+            field_to_value = attachment ? "<#{attachment['content']}|#{item['toString']}>" : item['toString']
+          end
           change_fields << {
             'title': "Field #{item['field']} changed",
-            'value': "#{item['fromString']} -> #{item['toString']}"
+            'value': "#{item['fromString']} -> #{field_to_value}"
           }
         end
       end
@@ -57,7 +65,6 @@ post '/jira_hook' do
     # user mention regex
     user_mention_regex = Regexp.new(/\[\~([^]]+)\]/)
     # get user mentions in issue description
-    issue = jira_api.get_issue(data['issue']['id'])
     if issue['fields']['description']
       issue['fields']['description'].scan(user_mention_regex).flatten.each do |name|
         recipient_list << name
@@ -75,8 +82,9 @@ post '/jira_hook' do
     recipient_list = recipient_list.to_set
     # remove the user that triggered the event
     recipient_list.delete(event_user)
-    # notify each recipient via slack
+    # construct the jira issue link
     issue_link = '<https://jira.guidebook.com/browse/%s|%s %s>' %[data['issue']['key'], data['issue']['key'], data['issue']['fields']['summary']]
+    # notify each recipient via slack
     recipient_list.each do |user|
       slack_api.post_message(
         channel: "@#{user}",
