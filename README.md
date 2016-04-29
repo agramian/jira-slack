@@ -57,8 +57,9 @@ Ex:
 ['More info'](https://github.com/sickill/racksh)
 
 ### Production
-Run bundle and bootstrap commands from above with `RACK_ENV=production`.
-Run `RACK_ENV=production rackup`.
+Run bundle and bootstrap commands from above with `RACK_ENV=production`.<br />
+Run `RACK_ENV=production rackup`.<br />
+To fork the process run `nohup sh -c 'RACK_ENV=production rackup' &`.
 
 Other
 -----
